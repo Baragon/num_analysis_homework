@@ -3,5 +3,6 @@
 right=5
 left=-5
 epsilon=0.0001
-functionClassName=nikitin.numanalysis.task1.SquareFunction
+separationStep=0.01
+functionClassName=nikitin.numanalysis.task1.ExampleFunction
 

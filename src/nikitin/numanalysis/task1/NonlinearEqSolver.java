@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Properties;
 import java.util.Scanner;
 
@@ -23,6 +24,7 @@ public class NonlinearEqSolver {
         properties.setProperty("left","-5");
         properties.setProperty("right","5");
         properties.setProperty("epsilon","0.0001");
+        properties.setProperty("separationStep","0.0001");
         properties.setProperty("functionClassName","nikitin.numanalysis.task1.SquareFunction");
         try {
             properties.store(new FileOutputStream("config.txt"), "Nonlinear Equation Solver configuration file");
@@ -41,6 +43,7 @@ public class NonlinearEqSolver {
         double l = Double.valueOf(properties.getProperty("left"));
         double r = Double.valueOf(properties.getProperty("right"));
         double eps = Double.valueOf(properties.getProperty("epsilon"));
+        double h = Double.valueOf(properties.getProperty("separationStep"));
         String funcClassName = properties.getProperty("functionClassName");
         AFunction func;
         try {
@@ -54,7 +57,35 @@ public class NonlinearEqSolver {
         }
 
         out.println("Численные методы решения нелинейных алгебраических и трансцендентных уравнений");
-        out.println("A=" + l + ", B=" + r + ", Epsilon=" + eps);
+        out.println("A=" + l + ", B=" + r + ", Epsilon=" + eps + ", h=" + h);
         out.println("f(x)=" + func);
+        ArrayList<Interval> intervals = Separate(l, r, h, func);
+        out.println("Результат отделения корней:");
+        for (Interval i : intervals) {
+            out.printf("[%1$.6f,%2$.6f]; ", i.l, i.r);
+        }
+        out.println();
+        /*
+        for(Interval i : intervals)
+        {
+            out.printf("[%1$.6f,%2$.6f]; ", func.Value(i.l),func.Value(i.r));
+        }
+        */
+    }
+
+    private static ArrayList<Interval> Separate(double a, double b, double h, AFunction f) {
+        ArrayList<Interval> result = new ArrayList<Interval>();
+        Interval interval = new Interval(a, b);
+        double leftValue = f.Value(a);
+        for (double i = a; i < b; i += h) {
+            if (leftValue * f.Value(i) <= 0) {
+                interval.r = i;
+                result.add(interval);
+                interval = new Interval(i, b);
+                leftValue = f.Value(i);
+            }
+        }
+        result.add(interval);
+        return result;
     }
 }
