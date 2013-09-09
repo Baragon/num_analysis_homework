@@ -1,6 +1,10 @@
 package nikitin.numanalysis.task1;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.util.Properties;
 import java.util.Scanner;
 
 /**
@@ -11,10 +15,46 @@ import java.util.Scanner;
  * To change this template use File | Settings | File Templates.
  */
 public class NonlinearEqSolver {
-    public static void Main(String[] args) {
+    public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
         PrintStream out = System.out;
-        out.println("Численные методы решения нелинейных алгебраических и трансцендентных уравнений");
+        Properties properties = new Properties();
+        /*
+        properties.setProperty("left","-5");
+        properties.setProperty("right","5");
+        properties.setProperty("epsilon","0.0001");
+        properties.setProperty("functionClassName","nikitin.numanalysis.task1.SquareFunction");
+        try {
+            properties.store(new FileOutputStream("config.txt"), "Nonlinear Equation Solver configuration file");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }      */
+        try {
+            properties.load(new FileInputStream("config.txt"));
+        } catch (FileNotFoundException e) {
+            out.println("Config file not found! Stack trace:");
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        properties.get("left");
+        double l = Double.valueOf(properties.getProperty("left"));
+        double r = Double.valueOf(properties.getProperty("right"));
+        double eps = Double.valueOf(properties.getProperty("epsilon"));
+        String funcClassName = properties.getProperty("functionClassName");
+        AFunction func;
+        try {
+            func = (AFunction) Class.forName(funcClassName).newInstance();
+        } catch (ClassNotFoundException e) {
+            out.println("No such function class!");
+            func = new SquareFunction();
+        } catch (Exception e) {
+            e.printStackTrace();
+            func = new SquareFunction();
+        }
 
+        out.println("Численные методы решения нелинейных алгебраических и трансцендентных уравнений");
+        out.println("A=" + l + ", B=" + r + ", Epsilon=" + eps);
+        out.println("f(x)=" + func);
     }
 }

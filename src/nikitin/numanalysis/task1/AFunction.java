@@ -7,8 +7,8 @@ package nikitin.numanalysis.task1;
  * Time: 19:36
  * To change this template use File | Settings | File Templates.
  */
-public interface IFunction {
-    public String toString();
+public abstract class AFunction {
+    public abstract String toString();
 
-    public double Value();
+    public abstract double Value(double x);
 }
