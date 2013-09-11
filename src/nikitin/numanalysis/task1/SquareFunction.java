@@ -18,4 +18,9 @@ public class SquareFunction extends AFunction {
     public double Value(double x) {
         return x * x;
     }
+
+    @Override
+    public double DerivativeValue(double x) {
+        return 2 * x;
+    }
 }

@@ -1,8 +1,8 @@
 #Nonlinear Equation Solver configuration file
 #Mon Sep 09 20:22:33 MSK 2013
-right=5
 left=-5
+right=5
 epsilon=0.0001
-separationStep=0.01
+separationStep=0.001
 functionClassName=nikitin.numanalysis.task1.ExampleFunction
 

@@ -20,17 +20,6 @@ public class NonlinearEqSolver {
         Scanner in = new Scanner(System.in);
         PrintStream out = System.out;
         Properties properties = new Properties();
-        /*
-        properties.setProperty("left","-5");
-        properties.setProperty("right","5");
-        properties.setProperty("epsilon","0.0001");
-        properties.setProperty("separationStep","0.0001");
-        properties.setProperty("functionClassName","nikitin.numanalysis.task1.SquareFunction");
-        try {
-            properties.store(new FileOutputStream("config.txt"), "Nonlinear Equation Solver configuration file");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }      */
         try {
             properties.load(new FileInputStream("config.txt"));
         } catch (FileNotFoundException e) {
@@ -62,20 +51,14 @@ public class NonlinearEqSolver {
         ArrayList<Interval> intervals = Separate(l, r, h, func);
         out.println("Результат отделения корней:");
         for (Interval i : intervals) {
-            out.printf("[%1$.6f,%2$.6f]; ", i.l, i.r);
+            out.printf("[%f,%f]; ", i.l, i.r);
         }
         out.println();
         out.println("# Метод бисекции");
         for (Interval i : intervals) {
-            out.printf("Рассматриваем интервал [%1$.6f,%2$.6f]:\n", i.l, i.r);
+            out.printf("Рассматриваем интервал [%f,%f]:\n", i.l, i.r);
             BisectionMethod(i, func, eps);
         }
-        /*
-        for(Interval i : intervals)
-        {
-            out.printf("[%1$.6f,%2$.6f]; ", func.Value(i.l),func.Value(i.r));
-        }
-        */
     }
 
     private static ArrayList<Interval> Separate(double a, double b, double h, AFunction f) {
@@ -100,11 +83,11 @@ public class NonlinearEqSolver {
         double x = (interval.l + interval.r) / 2;
         int n = 0;
         if (func.Value(l) == 0) {
-            System.out.printf("Число шагов: %1$d, Xn= %2$f, delta=0, Модуль невязки: %3$f)\n", n, l, 0f);
+            System.out.printf("Число шагов: %1$d, Xn= %2$f, Δ=0, Модуль невязки: %3$f)\n", n, l, 0f);
             return;
         }
         if (func.Value(r) == 0) {
-            System.out.printf("Число шагов: %1$d, Xn= %2$f, delta=0, Модуль невязки: %3$f)\n", n, r, 0f);
+            System.out.printf("Число шагов: %1$d, Xn= %2$f, Δ=0, Модуль невязки: %3$f)\n", n, r, 0f);
             return;
         }
         do {
@@ -112,7 +95,7 @@ public class NonlinearEqSolver {
             x = (l + r) / 2;
             double value = func.Value(x);
             if (value == 0) {
-                System.out.printf("Число шагов: %1$d, Xn= %2$f, delta=0, Модуль невязки: %3$f)\n", n, x, 0f);
+                System.out.printf("Число шагов: %1$d, Xn= %2$f, Δ=0, Модуль невязки: %3$f)\n", n, x, 0f);
                 return;
             } else if (value * func.Value(l) < 0) {
                 r = x;
@@ -121,6 +104,6 @@ public class NonlinearEqSolver {
             }
             n++;
         } while (r - l > 2 * epsilon);
-        System.out.printf("Число шагов: %1$d, Xn= %2$f, delta=%3$f, Модуль невязки: %3$f)\n", n, x, (r - l) / 2, Math.abs(func.Value(x)));
+        System.out.printf("Число шагов: %1$d, Xn= %2$f, Δ=%3$f, Модуль невязки: %4$f)\n", n, x, (r - l) / 2, Math.abs(func.Value(x)));
     }
 }
