@@ -64,6 +64,16 @@ public class NonlinearEqSolver {
             out.printf("Рассматриваем интервал [%f,%f]:\n", i.l, i.r);
             NewtonMethod(i, func, eps);
         }
+        out.println("# Модифицированный метод Ньютона");
+        for (Interval i : intervals) {
+            out.printf("Рассматриваем интервал [%f,%f]:\n", i.l, i.r);
+            NewtonModifiedMethod(i, func, eps);
+        }
+        out.println("# Метод хорд(секущих)");
+        for (Interval i : intervals) {
+            out.printf("Рассматриваем интервал [%f,%f]:\n", i.l, i.r);
+            FalsePositionMethod(i, func, eps);
+        }
     }
 
     private static ArrayList<Interval> Separate(double a, double b, double h, AFunction f) {
@@ -86,7 +96,7 @@ public class NonlinearEqSolver {
     private static void BisectionMethod(Interval interval, AFunction func, double epsilon) {
         double l = interval.l;
         double r = interval.r;
-        double prevX;
+        double px;
         double x = (interval.l + interval.r) / 2;
         int n = 0;
         if (func.Value(l) == 0) {
@@ -98,7 +108,7 @@ public class NonlinearEqSolver {
             return;
         }
         do {
-            prevX = x;
+            px = x;
             x = (l + r) / 2;
             double value = func.Value(x);
             if (value == 0) {
@@ -117,7 +127,7 @@ public class NonlinearEqSolver {
     private static void NewtonMethod(Interval interval, AFunction func, double epsilon) {
         double l = interval.l;
         double r = interval.r;
-        double prevX;
+        double px;
         double x = (interval.l + interval.r) / 2;
         int n = 0;
         System.out.printf("Начальное приближение x0=%g, ", x);
@@ -130,8 +140,75 @@ public class NonlinearEqSolver {
             return;
         }
         do {
-            prevX = x;
-            x = prevX - func.Value(prevX) / func.DerivativeValue(prevX);
+            px = x;
+            x = px - func.Value(px) / func.DerivativeValue(px);
+            double value = func.Value(x);
+            if (value == 0) {
+                System.out.printf("Число шагов: %1$d, Xn= %2$f, Δ=0, Модуль невязки: %3$f)\n", n, x, 0f);
+                return;
+            } else if (value * func.Value(l) < 0) {
+                r = x;
+            } else {
+                l = x;
+            }
+            n++;
+        } while (r - l > 2 * epsilon);
+        System.out.printf("Число шагов: %1$d, Xn= %2$f, Δ=%3$f, Модуль невязки: %4$f)\n", n, x, (r - l) / 2, Math.abs(func.Value(x)));
+    }
+
+    private static void NewtonModifiedMethod(Interval interval, AFunction func, double epsilon) {
+        double l = interval.l;
+        double r = interval.r;
+        double px;
+        double x = (interval.l + interval.r) / 2;
+        double x0 = x;
+        int n = 0;
+        System.out.printf("Начальное приближение x0=%g, ", x0);
+        if (func.Value(l) == 0) {
+            System.out.printf("Число шагов: %1$d, Xn= %2$f, Δ=0, Модуль невязки: %3$f)\n", n, l, 0f);
+            return;
+        }
+        if (func.Value(r) == 0) {
+            System.out.printf("Число шагов: %1$d, Xn= %2$f, Δ=0, Модуль невязки: %3$f)\n", n, r, 0f);
+            return;
+        }
+        do {
+            px = x;
+            x = px - func.Value(px) / func.DerivativeValue(x0);
+            double value = func.Value(x);
+            if (value == 0) {
+                System.out.printf("Число шагов: %1$d, Xn= %2$f, Δ=0, Модуль невязки: %3$f)\n", n, x, 0f);
+                return;
+            } else if (value * func.Value(l) < 0) {
+                r = x;
+            } else {
+                l = x;
+            }
+            n++;
+        } while (r - l > 2 * epsilon);
+        System.out.printf("Число шагов: %1$d, Xn= %2$f, Δ=%3$f, Модуль невязки: %4$f)\n", n, x, (r - l) / 2, Math.abs(func.Value(x)));
+    }
+
+    private static void FalsePositionMethod(Interval interval, AFunction func, double epsilon) {
+        double l = interval.l;
+        double r = interval.r;
+        double ppx;
+        double px = l;
+        double x = r;
+        int n = 0;
+        System.out.printf("Начальное приближение x0=%g, x1=%g ", px, x);
+        if (func.Value(l) == 0) {
+            System.out.printf("Число шагов: %1$d, Xn= %2$f, Δ=0, Модуль невязки: %3$f)\n", n, l, 0f);
+            return;
+        }
+        if (func.Value(r) == 0) {
+            System.out.printf("Число шагов: %1$d, Xn= %2$f, Δ=0, Модуль невязки: %3$f)\n", n, r, 0f);
+            return;
+        }
+        do {
+            ppx = px;
+            px = x;
+            x = px - (func.Value(px) * (px - ppx)) / (func.Value(px) - func.Value(ppx));
             double value = func.Value(x);
             if (value == 0) {
                 System.out.printf("Число шагов: %1$d, Xn= %2$f, Δ=0, Модуль невязки: %3$f)\n", n, x, 0f);
