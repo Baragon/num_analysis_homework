@@ -21,7 +21,7 @@ public class NonlinearEqSolver {
         PrintStream out = System.out;
         Properties properties = new Properties();
         try {
-            properties.load(new FileInputStream("config.txt"));
+            properties.load(new FileInputStream("config/task1.ini"));
         } catch (FileNotFoundException e) {
             out.println("Config file not found! Stack trace:");
             e.printStackTrace();
