@@ -1,4 +1,4 @@
-package nikitin.numanalysis.task1;
+package nikitin.numanalysis.task2;
 
 import nikitin.numanalysis.common.AFunction;
 

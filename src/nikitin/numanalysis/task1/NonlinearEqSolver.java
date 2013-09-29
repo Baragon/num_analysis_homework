@@ -1,5 +1,9 @@
 package nikitin.numanalysis.task1;
 
+import nikitin.numanalysis.common.AFunction;
+import nikitin.numanalysis.common.Interval;
+import nikitin.numanalysis.common.SquareFunction;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -8,13 +12,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.Scanner;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Baragon
- * Date: 09.09.13
- * Time: 19:27
- * To change this template use File | Settings | File Templates.
- */
+
 public class NonlinearEqSolver {
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
