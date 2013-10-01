@@ -59,6 +59,16 @@ public class PolynomialInterpolation {
                 out.printf("x%d=%g f(x%d)=%g\n", i, x, i, y);
                 table.add(new Point(x, y));
             }
+        } else if (rootsType.equalsIgnoreCase("EquallySpaced")) {
+            out.println("(равноотстоящих)");
+            int i = 0;
+            for (double j = l; j <= r; j += (r - l) / (m + 1)) {
+                double x = j;
+                double y = func.Value(x);
+                out.printf("x%d=%g f(x%d)=%g\n", i, x, i, y);
+                table.add(new Point(x, y));
+                i++;
+            }
         }
         out.print("x=");
         double x = in.nextDouble();
@@ -72,10 +82,14 @@ public class PolynomialInterpolation {
         for (int i = 0; i < n + 1; i++) {
             out.printf("x%d=%g f(x%d)=%g\n", i, table.get(i).x, i, table.get(i).y);
         }
-        double result = NewtonPolynomial(table, n, x);
-        double efn = Math.abs(func.Value(x) - result);
-        out.printf("Pn(x)=%g, f(x)=%g, фактическая погрешность eFn=%g", result, func.Value(x), efn);
-
+        out.println("В форме Ньютона:");
+        double resultN = NewtonPolynomial(table, n, x);
+        double efnN = Math.abs(func.Value(x) - resultN);
+        out.printf("Pn(x)=%.12f, f(x)=%g, фактическая погрешность eFn=%g\n", resultN, func.Value(x), efnN);
+        out.println("В форме Лагранжа:");
+        double resultL = LagrangePolynomial(table, n, x);
+        double efnL = Math.abs(func.Value(x) - resultN);
+        out.printf("Pn(x)=%.12f, f(x)=%g, фактическая погрешность eFn=%g\n", resultL, func.Value(x), efnL);
     }
 
     public static double NewtonPolynomial(ArrayList<Point> table, int n, double x) {
@@ -90,13 +104,29 @@ public class PolynomialInterpolation {
             for (int j = 0; j < n + 1 - i; j++) {
                 diffs[i][j] = (diffs[i - 1][j + 1] - diffs[i - 1][j]) / (table.get(i + j).x - table.get(j).x);
             }
-        for (int i = 0; i < n + 1; i++)
+      /*  for (int i = 0; i < n + 1; i++)
             out.printf("PP[0,%d]=%g\n", i, diffs[i][0]);
+            */
         double result = 0;
         double product = 1;
         for (int i = 0; i < n + 1; i++) {
             result += diffs[i][0] * product;
             product *= x - table.get(i).x;
+        }
+        return result;
+    }
+
+    public static double LagrangePolynomial(ArrayList<Point> table, int n, double x) {
+        double result = 0;
+        for (int i = 0; i < n + 1; i++) {
+            double a = 1, b = 1;
+            for (int j = 0; j < n + 1; j++) {
+                if (i != j) {
+                    a *= x - table.get(j).x;
+                    b *= table.get(i).x - table.get(j).x;
+                }
+            }
+            result += a * table.get(i).y / b;
         }
         return result;
     }
