@@ -85,11 +85,11 @@ public class PolynomialInterpolation {
         out.println("В форме Ньютона:");
         double resultN = NewtonPolynomial(table, n, x);
         double efnN = Math.abs(func.Value(x) - resultN);
-        out.printf("Pn(x)=%.12f, f(x)=%g, фактическая погрешность eFn=%g\n", resultN, func.Value(x), efnN);
+        out.printf("Pn(x)=%.12f, f(x)=%.12f, фактическая погрешность eFn=%g\n", resultN, func.Value(x), efnN);
         out.println("В форме Лагранжа:");
         double resultL = LagrangePolynomial(table, n, x);
         double efnL = Math.abs(func.Value(x) - resultN);
-        out.printf("Pn(x)=%.12f, f(x)=%g, фактическая погрешность eFn=%g\n", resultL, func.Value(x), efnL);
+        out.printf("Pn(x)=%.12f, f(x)=%.12f, фактическая погрешность eFn=%g\n", resultL, func.Value(x), efnL);
     }
 
     public static double NewtonPolynomial(ArrayList<Point> table, int n, double x) {
