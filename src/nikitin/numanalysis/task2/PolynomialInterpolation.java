@@ -69,6 +69,15 @@ public class PolynomialInterpolation {
                 table.add(new Point(x, y));
                 i++;
             }
+        } else if (rootsType.equalsIgnoreCase("Chebychev")) {
+            out.println("(корни многочлена Чебышёва)");
+            for (int i = 1; i <= m + 1; i++) {
+                double x = 0.5 * (l + r) + 0.5 * (r - l) * Math.cos((2 * i - 1) / (2.0 * (m + 1)) * Math.PI);
+                double y = func.Value(x);
+                out.printf("x%d=%g f(x%d)=%g\n", i, x, i, y);
+                table.add(new Point(x, y));
+            }
+
         }
         out.print("x=");
         double x = in.nextDouble();
