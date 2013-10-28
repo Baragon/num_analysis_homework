@@ -21,7 +21,7 @@ public class FiniteDifference {
         this.table = table;
         fDiff = new double[m + 1][];
         for (int i = 0; i < m + 1; i++) {
-            fDiff[i] = new double[n - i + 1];
+            fDiff[i] = new double[m - i + 2];
         }
         Compute();
     }
@@ -31,13 +31,13 @@ public class FiniteDifference {
             fDiff[i][0] = table.get(i).y;
         for (int k = 1; k <= n; k++) {
             for (int i = 0; i <= m - k; i++)
-                fDiff[i][k] = fDiff[i + 1][k] - fDiff[i][k - 1];
+                fDiff[i][k] = fDiff[i + 1][k - 1] - fDiff[i][k - 1];
         }
     }
 
     public double GetDiff(int k, int order) {
         if ((order > n) || (order < 0)) return 0;
-        if ((k > m) || (k < m)) return 0;
+        if ((k > m) || (k < 0)) return 0;
         return fDiff[k][order];
     }
 }
