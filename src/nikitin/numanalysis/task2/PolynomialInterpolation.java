@@ -28,10 +28,35 @@ public class PolynomialInterpolation {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        out.println(Math.sin(0.9) * (0.05) * (0.05) * (0.15) * (0.15) * 0.25 * 0.35 / 720.0);
+        out.println("Задача алгебраического интерполирования.");
+        out.println("Интерполяционный многочлен в форме Ньютона и в форме Лагранжа.");
+        double l;
+        if (properties.getProperty("left").equalsIgnoreCase("?")) {
+            out.println("a=");
+            l = in.nextDouble();
+        } else {
+            l = Double.valueOf(properties.getProperty("left"));
+        }
+        double r;
+        if (properties.getProperty("right").equalsIgnoreCase("?")) {
+            out.println("b=");
+            r = in.nextDouble();
+        } else {
+            r = Double.valueOf(properties.getProperty("right"));
+        }
+
+        int m;
+        if (properties.getProperty("NumberOfRoots").equalsIgnoreCase("?")) {
+            out.println("m=");
+            m = in.nextInt();
+        } else {
+            m = Integer.valueOf(properties.getProperty("NumberOfRoots"));
+        }
         String rootsType = properties.getProperty("RootsType");
-        double l = Double.valueOf(properties.getProperty("left"));
-        double r = Double.valueOf(properties.getProperty("right"));
-        int m = Integer.valueOf(properties.getProperty("NumberOfRoots"));
+        //double l = Double.valueOf(properties.getProperty("left"));
+        //double r = Double.valueOf(properties.getProperty("right"));
+        //int m = Integer.valueOf(properties.getProperty("NumberOfRoots"));
         String funcClassName = properties.getProperty("functionClassName");
         AFunction func;
         try {
@@ -45,9 +70,9 @@ public class PolynomialInterpolation {
         }
         ArrayList<Point> table = new ArrayList<Point>(m);
 
-        out.println("Задача алгебраического интерполирования.");
-        out.println("Интерполяционный многочлен в форме Ньютона и в форме Лагранжа.");
+
         out.println("f(x)=" + func);
+        out.printf("a=%g , b=%g , m=%d\n", l, r, m);
         out.print("Построение таблицы значений ");
         if (rootsType.equalsIgnoreCase("Random")) {
             out.println("случайным образом");
@@ -62,18 +87,29 @@ public class PolynomialInterpolation {
         } else if (rootsType.equalsIgnoreCase("EquallySpaced")) {
             out.println("(равноотстоящих)");
             int i = 0;
-            for (double j = l; j <= r; j += (r - l) / (m + 1)) {
+            for (double j = l; i <= m; j += (r - l) / m) {
                 double x = j;
                 double y = func.Value(x);
                 out.printf("x%d=%g f(x%d)=%g\n", i, x, i, y);
                 table.add(new Point(x, y));
                 i++;
             }
+        } else if (rootsType.equalsIgnoreCase("Chebychev")) {
+            out.println("(корни многочлена Чебышёва)");
+            for (int i = 0; i <= m; i++) {
+                double x = 0.5 * (l + r) + 0.5 * (r - l) * Math.cos((2 * i - 1) / (2.0 * (m + 1)) * Math.PI);
+                double y = func.Value(x);
+                out.printf("x%d=%g f(x%d)=%g\n", i, x, i, y);
+                table.add(new Point(x, y));
+            }
+
         }
+
         out.print("x=");
         double x = in.nextDouble();
         int n;
         do {
+            out.println("Введите n(n<=m):");
             out.print("n=");
             n = in.nextInt();
             if (n > m) out.println("n не может быть больше m!");
@@ -85,11 +121,12 @@ public class PolynomialInterpolation {
         out.println("В форме Ньютона:");
         double resultN = NewtonPolynomial(table, n, x);
         double efnN = Math.abs(func.Value(x) - resultN);
-        out.printf("Pn(x)=%.12f, f(x)=%g, фактическая погрешность eFn=%g\n", resultN, func.Value(x), efnN);
+        out.printf("Pn(x)=%.12f, f(x)=%.12f, фактическая погрешность eFn=%g\n", resultN, func.Value(x), efnN);
         out.println("В форме Лагранжа:");
         double resultL = LagrangePolynomial(table, n, x);
         double efnL = Math.abs(func.Value(x) - resultN);
-        out.printf("Pn(x)=%.12f, f(x)=%g, фактическая погрешность eFn=%g\n", resultL, func.Value(x), efnL);
+        out.printf("Pn(x)=%.12f, f(x)=%.12f, фактическая погрешность eFn=%g\n", resultL, func.Value(x), efnL);
+        //
     }
 
     public static double NewtonPolynomial(ArrayList<Point> table, int n, double x) {
