@@ -74,7 +74,7 @@ public class NonlinearEqSolver {
         }
     }
 
-    private static ArrayList<Interval> Separate(double a, double b, double h, AFunction f) {
+    public static ArrayList<Interval> Separate(double a, double b, double h, AFunction f) {
         ArrayList<Interval> result = new ArrayList<Interval>();
         Interval interval = new Interval(a, b);
         double leftValue = f.Value(a);
@@ -91,27 +91,27 @@ public class NonlinearEqSolver {
         return result;
     }
 
-    private static void BisectionMethod(Interval interval, AFunction func, double epsilon) {
+    public static double BisectionMethod(Interval interval, AFunction func, double epsilon) {
         double l = interval.l;
         double r = interval.r;
         double px;
         double x = (interval.l + interval.r) / 2;
         int n = 0;
         if (func.Value(l) == 0) {
-            System.out.printf("Число шагов: %1$d, Xn= %2$f, Δ=0, Модуль невязки: %3$f)\n", n, l, 0f);
-            return;
+            System.out.printf("Число шагов: %d, Xn= %.12f, Δ=0, Модуль невязки: %.12f)\n", n, l, 0f);
+            return l;
         }
         if (func.Value(r) == 0) {
-            System.out.printf("Число шагов: %1$d, Xn= %2$f, Δ=0, Модуль невязки: %3$f)\n", n, r, 0f);
-            return;
+            System.out.printf("Число шагов: %d, Xn= %.12f, Δ=0, Модуль невязки: %.12f)\n", n, r, 0f);
+            return r;
         }
         do {
             px = x;
             x = (l + r) / 2;
             double value = func.Value(x);
             if (value == 0) {
-                System.out.printf("Число шагов: %1$d, Xn= %2$f, Δ=0, Модуль невязки: %3$f)\n", n, x, 0f);
-                return;
+                System.out.printf("Число шагов: %d, Xn= %.12f, Δ=0, Модуль невязки: %.12f)\n", n, x, 0f);
+                return x;
             } else if (value * func.Value(l) < 0) {
                 r = x;
             } else {
@@ -119,10 +119,11 @@ public class NonlinearEqSolver {
             }
             n++;
         } while (r - l > 2 * epsilon);
-        System.out.printf("Число шагов: %1$d, Xn= %2$f, Δ=%3$f, Модуль невязки: %4$f)\n", n, x, (r - l) / 2, Math.abs(func.Value(x)));
+        System.out.printf("Число шагов: %d, Xn= %.12f, Δ=%.12f, Модуль невязки: %.12f)\n", n, x, (r - l) / 2, Math.abs(func.Value(x)));
+        return x;
     }
 
-    private static void NewtonMethod(Interval interval, AFunction func, double epsilon) {
+    public static void NewtonMethod(Interval interval, AFunction func, double epsilon) {
         double l = interval.l;
         double r = interval.r;
         double px;
@@ -154,7 +155,7 @@ public class NonlinearEqSolver {
         System.out.printf("Число шагов: %1$d, Xn= %2$f, Δ=%3$f, Модуль невязки: %4$f)\n", n, x, (r - l) / 2, Math.abs(func.Value(x)));
     }
 
-    private static void NewtonModifiedMethod(Interval interval, AFunction func, double epsilon) {
+    public static void NewtonModifiedMethod(Interval interval, AFunction func, double epsilon) {
         double l = interval.l;
         double r = interval.r;
         double px;
