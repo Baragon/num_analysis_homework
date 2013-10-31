@@ -24,4 +24,8 @@ public class TestFunction11 extends AFunction {
     public double DerivativeValue(double x) {
         return Math.cos(x) + 2 * x;  //To change body of implemented methods use File | Settings | File Templates.
     }
+
+    public double Derivative2Value(double x) {
+        return -Math.sin(x) + 2;
+    }
 }

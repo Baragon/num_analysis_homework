@@ -104,6 +104,29 @@ public class ReverseInterpolation {
             double x = NonlinearEqSolver.BisectionMethod(i, pn, 0.00000001f);
             out.printf("X=%.12f, r(X)=%.12f\n", x, Math.abs(func.Value(x) - f));
         }
+        table = new TableBuilder().CreateEquallySpaced(l, r, m, func);
+        double h = (r - l) / m;
+        double[] df = new double[table.size()];
+        double[] ddf = new double[table.size()];
+        df[0] = (-3 * table.get(0).y + 4 * table.get(1).y - table.get(2).y) / 2 / h;
+        df[df.length - 1] = (+3 * table.get(df.length - 1).y - 4 * table.get(df.length - 2).y + table.get(df.length - 3).y) / 2 / h;
+
+        for (int i = 1; i < table.size() - 1; i++) {
+            double x = table.get(i).x;
+            double y = table.get(i).y;
+            df[i] = (table.get(i + 1).y - table.get(i - 1).y) / 2 / h;
+            ddf[i] = (table.get(i + 1).y - 2 * table.get(i).y + table.get(i - 1).y) / h / h;
+        }
+        double drStart = Math.abs(df[0] - func.DerivativeValue(table.get(0).x));
+        out.println("  Xi           |    F(Xi)       |  ~F'(Xi)       |    R'(F,Xi)    |    ~F\"(Xi)     |   R\"(F,Xi)    ");
+        out.printf("%14.12f | %14.12f | %14.12f | %14.12f |################|#################\n", table.get(0).x, table.get(0).y, df[0], drStart);
+        for (int i = 1; i < table.size() - 1; i++) {
+            double dr = Math.abs(df[i] - func.DerivativeValue(table.get(i).x));
+            double ddr = Math.abs(ddf[i] - func.Derivative2Value(table.get(i).x));
+            out.printf("%14.12f | %14.12f | %14.12f | %14.12f | %14.12f | %14.12f\n", table.get(i).x, table.get(i).y, df[i], dr, ddf[i], ddr);
+        }
+        double drEnd = Math.abs(df[m] - func.DerivativeValue(table.get(m).x));
+        out.printf("%14.12f | %14.12f | %14.12f | %14.12f |################|#################\n", table.get(m).x, table.get(m).y, df[m], drEnd);
 
     }
 }
