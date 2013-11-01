@@ -16,6 +16,11 @@ public class TestFunction11 extends AFunction {
     }
 
     @Override
+    public double AntiDerivativeValue(double x) {
+        return -Math.cos(x) + x * x * x / 3;
+    }
+
+    @Override
     public double Value(double x) {
         return Math.sin(x) + x * x;  //To change body of implemented methods use File | Settings | File Templates.
     }

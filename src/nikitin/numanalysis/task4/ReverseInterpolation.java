@@ -35,7 +35,7 @@ public class ReverseInterpolation {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        out.println("Интерполирование по равноотстоящим узлам.");
+        out.println("Задача обратного интерполирования.");
         double l;
         if (properties.getProperty("left").equalsIgnoreCase("?")) {
             out.println("a=");
@@ -104,6 +104,7 @@ public class ReverseInterpolation {
             double x = NonlinearEqSolver.BisectionMethod(i, pn, 0.00000001f);
             out.printf("X=%.12f, r(X)=%.12f\n", x, Math.abs(func.Value(x) - f));
         }
+        out.println("Нахождение производных таблично-заданной функции.");
         table = new TableBuilder().CreateEquallySpaced(l, r, m, func);
         double h = (r - l) / m;
         double[] df = new double[table.size()];
