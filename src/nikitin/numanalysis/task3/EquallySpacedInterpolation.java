@@ -81,12 +81,15 @@ public class EquallySpacedInterpolation {
             if (n > m) out.println("n не может быть больше m!");
         } while (n > m);
         double h = (r - l) / m;
-        out.printf("Введите x ∈ [%g,%g]\n", l, r);
+        out.printf("Введите x ∈ [%g,%g] или x ∈ [%g,%g] или x ∈ [%g,%g]\n", l, l + h, l + ((n + 1) / 2) * h, r - ((n + 1) / 2) * h, r - h, r);
         double x;
         do {
             out.print("x=");
             x = in.nextDouble();
-            if ((x < l) || (x > r)) out.println("x должен ∈ [a,b]");
+            if (!((x >= l) && (x <= l + h)) || ((x >= l + ((n + 1) / 2) * h) && (x <= r - ((n + 1) / 2) * h)) || ((x >= r - h) && (x <= r)))
+                out.printf("x должен ∈ [%g,%g] или x ∈ [%g,%g] или x ∈ [%g,%g]\n", l, l + h, l + ((n + 1) / 2) * h, r - ((n + 1) / 2) * h, r - h, r);
+
+            //if ((x < l) || (x > r)) out.println("x должен ∈ [a,b]");
         } while ((x < l) || (x > r));
         FiniteDifference fDiff = new FiniteDifference(m, n, table);
         double xl;
@@ -127,10 +130,12 @@ public class EquallySpacedInterpolation {
             double t = (x - table.get(k0).x) / h;
             pn = table.get(k0).y;
             for (int j = 0; j < n; j++) {
-                int sign = 2 * (j % 2) - 1;
+                int sign = 2 * ((j + 1) % 2) - 1;
                 tProduct *= t + sign * ((j + 1) / 2);
+                //out.println(tProduct);
                 factorial *= (j + 1);
                 pn += tProduct / factorial * fDiff.GetDiff(k0 - ((j + 1) / 2), j + 1);
+                //out.println(fDiff.GetDiff(k0-((j + 1) / 2), j + 1));
             }
         }
         out.printf("Pn=%.12f, efn=%.12f\n", pn, Math.abs(func.Value(x) - pn));
