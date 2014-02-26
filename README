@@ -1,1 +1,64 @@
-This file was created by IntelliJ IDEA 12.1.4 for binding GitHub repository
+package nikitin.numanalysis.task9;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.Scanner;
+
+/**
+ * Created with IntelliJ IDEA.
+ * User: m10nds
+ * Date: 26.02.14
+ * Time: 15:52
+ * To change this template use File | Settings | File Templates.
+ */
+public class GaussianElimination {
+    private static PrintStream out;
+    private static Scanner in;
+    public static void main(String[] args) {
+        Locale.setDefault(Locale.ENGLISH);
+        out = System.out;
+        try{
+            in = new Scanner(new FileInputStream("config/GaussianElimination.txt"));
+        } catch (FileNotFoundException e)
+        {
+            out.println("File not found!");
+            e.printStackTrace();
+        }
+        Properties properties = new Properties();
+        try {
+            properties.load(new FileInputStream("config/task9.ini"));
+        } catch (FileNotFoundException e) {
+            out.println("Config file not found! Stack trace:");
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        out.println("Классический метод Гаусса решения систем линейных алгебраических уравнений");
+        out.println("Ax=b");
+        String line = in.nextLine();
+        String[] words = line.split(" ");
+        int n = words.length;
+
+        double[][] A = new double[n][n];
+        for(int j=0;j<n;j++) A[0][j]=Double.valueOf(words[j]);
+        for(int i=1;i<n;i++)
+        {
+           for(int j=0;j<n;j++)
+           {
+               A[i][j]=in.nextDouble();
+           }
+        }
+
+        out.println("Матрица A:");
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<n-1;j++)
+                out.printf("%8.4f ",A[i][j]);
+            out.printf("%8.4f \n",A[i][n-1]);
+        }
+    }
+}
