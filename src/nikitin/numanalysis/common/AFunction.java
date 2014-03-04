@@ -16,4 +16,8 @@ public abstract class AFunction {
     public double AntiDerivativeValue(double x) {
         throw new NotImplementedException();
     }
+
+    public AFunction DerivativeFunction() {
+        throw new NotImplementedException();
+    }
 }

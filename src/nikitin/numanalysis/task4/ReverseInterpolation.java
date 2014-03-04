@@ -101,7 +101,7 @@ public class ReverseInterpolation {
 //        out.println(value);
         ArrayList<Interval> intervals = NonlinearEqSolver.Separate(l, r, (r - l) / m, pn);
         for (Interval i : intervals) {
-            double x = NonlinearEqSolver.BisectionMethod(i, pn, 0.00000001f);
+            double x = NonlinearEqSolver.BisectionMethod(i, pn, 0.00000001f, out);
             out.printf("X=%.12f, r(X)=%.12f\n", x, Math.abs(func.Value(x) - f));
         }
         out.println("Нахождение производных таблично-заданной функции.");

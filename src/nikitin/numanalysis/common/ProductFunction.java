@@ -18,7 +18,7 @@ public class ProductFunction extends AFunction {
 
     @Override
     public String toString() {
-        return a.toString() + "*" + b.toString();  //To change body of implemented methods use File | Settings | File Templates.
+        return "(" + a.toString() + "*" + b.toString() + ")";  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
@@ -29,5 +29,10 @@ public class ProductFunction extends AFunction {
     @Override
     public double DerivativeValue(double x) {
         return a.DerivativeValue(x) * b.Value(x) + a.Value(x) * b.DerivativeValue(x);  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public AFunction DerivativeFunction() {
+        return new SumFunction(new ProductFunction(a, b.DerivativeFunction()), new ProductFunction(a.DerivativeFunction(), b));
     }
 }

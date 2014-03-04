@@ -22,4 +22,9 @@ public class ExponentFunction extends AFunction {
     public double DerivativeValue(double x) {
         return Math.exp(x);
     }
+
+    @Override
+    public AFunction DerivativeFunction() {
+        return this;
+    }
 }

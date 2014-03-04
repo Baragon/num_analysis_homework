@@ -16,7 +16,7 @@ public class PowerFunction extends AFunction {
 
     @Override
     public String toString() {
-        return "x^" + p;  //To change body of implemented methods use File | Settings | File Templates.
+        return "x^" + (int) p;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
@@ -27,5 +27,11 @@ public class PowerFunction extends AFunction {
     @Override
     public double DerivativeValue(double x) {
         return p * Math.pow(x, p - 1);  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public AFunction DerivativeFunction() {
+        if (p == 1) return new ConstantFunction(1);
+        else return new ProductFunction(new ConstantFunction(p), new PowerFunction(p - 1));
     }
 }

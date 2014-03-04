@@ -55,7 +55,7 @@ public class NonlinearEqSolver {
         out.println("# Метод бисекции");
         for (Interval i : intervals) {
             out.printf("Рассматриваем интервал [%f,%f]:\n", i.l, i.r);
-            BisectionMethod(i, func, eps);
+            BisectionMethod(i, func, eps, System.out);
         }
         out.println("# Метод Ньютона(касательных)");
         for (Interval i : intervals) {
@@ -91,18 +91,18 @@ public class NonlinearEqSolver {
         return result;
     }
 
-    public static double BisectionMethod(Interval interval, AFunction func, double epsilon) {
+    public static double BisectionMethod(Interval interval, AFunction func, double epsilon, PrintStream out) {
         double l = interval.l;
         double r = interval.r;
         double px;
         double x = (interval.l + interval.r) / 2;
         int n = 0;
         if (func.Value(l) == 0) {
-            System.out.printf("Число шагов: %d, Xn= %.12f, Δ=0, Модуль невязки: %.12f)\n", n, l, 0f);
+            out.printf("Число шагов: %d, Xn= %.12f, Δ=0, Модуль невязки: %.12f)\n", n, l, 0f);
             return l;
         }
         if (func.Value(r) == 0) {
-            System.out.printf("Число шагов: %d, Xn= %.12f, Δ=0, Модуль невязки: %.12f)\n", n, r, 0f);
+            out.printf("Число шагов: %d, Xn= %.12f, Δ=0, Модуль невязки: %.12f)\n", n, r, 0f);
             return r;
         }
         do {
@@ -110,7 +110,7 @@ public class NonlinearEqSolver {
             x = (l + r) / 2;
             double value = func.Value(x);
             if (value == 0) {
-                System.out.printf("Число шагов: %d, Xn= %.12f, Δ=0, Модуль невязки: %.12f)\n", n, x, 0f);
+                out.printf("Число шагов: %d, Xn= %.12f, Δ=0, Модуль невязки: %.12f)\n", n, x, 0f);
                 return x;
             } else if (value * func.Value(l) < 0) {
                 r = x;
@@ -119,7 +119,7 @@ public class NonlinearEqSolver {
             }
             n++;
         } while (r - l > 2 * epsilon);
-        System.out.printf("Число шагов: %d, Xn= %.12f, Δ=%.12f, Модуль невязки: %.12f)\n", n, x, (r - l) / 2, Math.abs(func.Value(x)));
+        out.printf("Число шагов: %d, Xn= %.12f, Δ=%.12f, Модуль невязки: %.12f)\n", n, x, (r - l) / 2, Math.abs(func.Value(x)));
         return x;
     }
 
