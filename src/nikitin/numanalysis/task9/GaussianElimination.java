@@ -114,4 +114,27 @@ public class GaussianElimination {
         }
         return X;
     }
+
+    public static double[] GaussianEliminate(double[][] A, double B[]) {
+        int n = A.length;
+        double[] X = new double[n];
+        //first step
+        for (int i = 0; i < n; i++) {
+            B[i] /= A[i][i];
+            for (int j = n - 1; j >= i; j--)
+                A[i][j] = A[i][j] / A[i][i];
+            for (int k = i + 1; k < n; k++) {
+                B[k] -= B[i] * A[k][i];
+                for (int j = n - 1; j >= i; j--)
+                    A[k][j] -= A[i][j] * A[k][i];
+            }
+        }
+        for (int i = n - 1; i >= 0; i--) {
+            X[i] = B[i];
+            for (int j = n - 1; j > i; j--) {
+                X[i] -= X[j] * A[i][j];
+            }
+        }
+        return X;
+    }
 }
