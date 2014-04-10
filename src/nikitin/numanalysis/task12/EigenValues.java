@@ -13,7 +13,7 @@ public class EigenValues {
     private static PrintStream out;
     private static Scanner in;
     private static double eps = 0.000001;
-    private static boolean matrix=true;
+    private static boolean matrix=false;
     public static void main(String[] args)
     {
         Locale.setDefault(Locale.ENGLISH);
@@ -53,8 +53,8 @@ public class EigenValues {
         int n=A.length;
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n - 1; j++)
-                out.printf("%8.4f ", A[i][j]);
-            out.printf("%8.4f \n", A[i][n - 1]);
+                out.printf("%10.6f ", A[i][j]);
+            out.printf("%10.6f \n", A[i][n - 1]);
         }
     }
 
@@ -68,6 +68,8 @@ public class EigenValues {
         double tdelta = 0;
         int k=0;
         do{
+            k++;
+            out.println(k+"-я итерация:");
             double max = A[0][1];
             int maxi, maxj;
             maxi = 0;
@@ -106,7 +108,10 @@ public class EigenValues {
                 c[maxj][maxj] = sin * sin * aii - 2 * cos * sin * aij + cos * cos * ajj;
                 c[maxi][maxj] = 0;
                 c[maxj][maxi] = 0;
+                double[][] t;
+                t=A;
                 A = c;
+                c=t;
             }
             else{
                 double t[][] = new double[n][n];
@@ -133,15 +138,22 @@ public class EigenValues {
             PrintMatrix(A);
             tdelta = delta;
             delta=0;
-            k++;
+
+
             for (int i = 0; i < n; i++) {
                 lambda[i] = A[i][i];
                 delta += A[i][i] * A[i][i];
             }
+           /*
             for(int i=0;i<n;i++)
-                out.printf("λ[%d]=%8.4f ",i,lambda[i]);
+                for(int j=0;j<n;j++)
+                    if(i!=j) if(Math.abs(A[i][j])>delta) delta=Math.abs(A[i][j]);
+             */
+            for(int i=0;i<n;i++)
+                out.printf("λ[%d]=%8.6f ",i,lambda[i]);
             out.println();
         } while (Math.abs(delta-tdelta) > eps);
+        //while(delta>eps);
         out.println(k+" итераций");
         return lambda;
     }
