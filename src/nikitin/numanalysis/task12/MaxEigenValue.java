@@ -53,6 +53,9 @@ public class MaxEigenValue {
         double[] y=new double[n];
         double[] t=new double[n];
         t[0]=1;
+        out.print("Начатьный вектор: [");
+        for(int i=0;i<n-1;i++) out.printf("%8.6f, ", t[i]);
+        out.printf("%8.6f]\n",t[n-1]);
         double error;
         do{
             k++;
@@ -61,8 +64,13 @@ public class MaxEigenValue {
             for(int i=0;i<n;i++)
                 for(int j=0;j<n;j++) t[i]+=a[i][j]*y[j];
             lambda=t[0]/y[0];
+            double[] b = new double[n];
+            for(int i=0;i<n;i++) b[i]=t[i]/y[i];
+            out.print(k+"-я итерация: "+"y["+(k+1)+"]/y["+k+"]=[");
+            for(int i=0;i<n-1;i++) out.printf("%8.6f, ", b[i]);
+            out.printf("%8.6f]\n",b[n-1]);
             error=getError(t,y);
-            for(int i=n-1;i>=0;i--) t[i]/=t[0]; 
+            for(int i=n-1;i>=0;i--) t[i]/=t[0];
         } while(error>eps);
         out.println(k+" итераций");
         return lambda;
